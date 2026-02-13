@@ -183,15 +183,6 @@ Echologue/
 4. **实现基础设施** → 实现仓储接口，持久化数据
 5. **实现接口层** → 提供REST API
 
-## 📝 开发进度
-
-- [x] Day 1: 项目脚手架搭建
-- [ ] Day 2: 用户领域开发
-- [ ] Day 3-4: 文章领域开发
-- [ ] Day 5: 分类/标签开发
-- [ ] Day 6-7: 前端开发
-- [ ] Day 8: 联调与优化
-
 ## 🤝 贡献指南
 
 欢迎提交Issue和Pull Request！
@@ -199,13 +190,3 @@ Echologue/
 ## 📄 License
 
 本项目采用 [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0) 开源协议。
-
-## 📧 联系方式
-
-- **项目地址**: https://github.com/your-repo/Echologue
-- **技术文档**: [技术选型与功能规划.md](./技术选型与功能规划.md)
-- **开发计划**: [MVP开发计划-DDD版.md](./MVP开发计划-DDD版.md)
-
----
-
-**Echologue Team** - 专注于打造优雅的写作体验
