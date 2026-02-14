@@ -7,6 +7,7 @@ import com.echologue.types.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -76,6 +77,15 @@ public class GlobalExceptionHandler {
     public Result<?> handleIllegalArgumentException(IllegalArgumentException e) {
         log.error("非法参数异常：{}", e.getMessage());
         return Result.fail(400, e.getMessage());
+    }
+
+    /**
+     * 静态资源不存在异常
+     */
+    @ExceptionHandler(NoResourceFoundException.class)
+    public Result<?> handleNoResourceFoundException(NoResourceFoundException e) {
+        log.warn("静态资源不存在：{}", e.getResourcePath());
+        return Result.fail(404, "资源不存在");
     }
     
     /**

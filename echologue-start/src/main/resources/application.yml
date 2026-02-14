@@ -55,12 +55,6 @@ sa-token:
   # 是否输出操作日志
   is-log: false
 
-# Knife4j配置
-knife4j:
-  enable: true
-  setting:
-    language: zh_cn
-
 # SpringDoc配置
 springdoc:
   api-docs:
