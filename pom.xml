@@ -31,10 +31,10 @@
         
         <!-- 依赖版本管理 -->
         <spring-boot.version>3.4.0</spring-boot.version>
-        <mybatis-plus.version>3.5.5</mybatis-plus.version>
+        <mybatis-plus.version>3.5.16</mybatis-plus.version>
         <sa-token.version>1.37.0</sa-token.version>
         <mysql.version>8.2.0</mysql.version>
-        <knife4j.version>4.3.0</knife4j.version>
+        <springdoc.version>2.8.9</springdoc.version>
         <lombok.version>1.18.30</lombok.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <hutool.version>5.8.23</hutool.version>
@@ -56,7 +56,7 @@
             <!-- MyBatis Plus -->
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
 
@@ -74,11 +74,11 @@
                 <version>${mysql.version}</version>
             </dependency>
 
-            <!-- Knife4j API文档 -->
+            <!-- Springdoc API文档 -->
             <dependency>
-                <groupId>com.github.xiaoymin</groupId>
-                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
-                <version>${knife4j.version}</version>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc.version}</version>
             </dependency>
 
             <!-- Lombok -->
