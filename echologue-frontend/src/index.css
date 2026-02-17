@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-gray-200 dark:border-gray-700;
+  }
+  
+  body {
+    @apply bg-white dark:bg-dark-bg text-gray-900 dark:text-dark-text;
+    @apply font-sans leading-relaxed;
+    @apply min-h-screen;
+  }
+}
+
+@layer components {
+  /* 自定义按钮样式 */
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+    @apply hover:shadow-lg active:scale-95;
+  }
+  
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-primary-dark;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-200 dark:bg-dark-card text-gray-900 dark:text-dark-text;
+    @apply hover:bg-gray-300 dark:hover:bg-gray-600;
+  }
+  
+  /* 卡片样式 */
+  .card {
+    @apply bg-white dark:bg-dark-card rounded-lg shadow-sm;
+    @apply border border-gray-200 dark:border-gray-700;
+    @apply transition-shadow duration-200 hover:shadow-lg;
+  }
+  
+  /* 输入框样式 */
+  .input {
+    @apply w-full px-4 py-2 rounded-lg;
+    @apply bg-white dark:bg-dark-card;
+    @apply border border-gray-300 dark:border-gray-600;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+    @apply transition-all duration-200;
+  }
+  
+  /* 容器样式 */
+  .container-content {
+    @apply max-w-content mx-auto px-6;
+  }
+}
+
+@layer utilities {
+  /* 文本渐变 */
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent;
+  }
+  
+  /* 滚动条样式 */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
