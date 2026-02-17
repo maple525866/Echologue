@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   createArticle,
@@ -27,6 +27,8 @@ const Editor = () => {
   const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [loadError, setLoadError] = useState('');
+  const justCreatedArticleIdRef = useRef<number | null>(null);
 
   const loadCategoriesAndTags = useCallback(async () => {
     try {
@@ -46,6 +48,7 @@ const Editor = () => {
     try {
       const res = await getArticleDetail(articleId);
       const article = res.data;
+      setLoadError('');
       setTitle(article.title);
       setContent(article.content || '');
       setSummary(article.summary || '');
@@ -53,12 +56,11 @@ const Editor = () => {
       setSelectedTags(article.tagIds || []);
     } catch (error) {
       console.error('加载文章失败:', error);
-      alert('文章加载失败');
-      navigate('/');
+      setLoadError('草稿加载失败，请稍后重试，当前编辑内容不会丢失。');
     } finally {
       setLoading(false);
     }
-  }, [navigate]);
+  }, []);
 
   const handleSaveDraft = useCallback(async () => {
     if (!title.trim() || !content.trim()) return;
@@ -78,6 +80,7 @@ const Editor = () => {
       } else {
         const res = await createArticle(data);
         // 创建成功后跳转到编辑页面
+        justCreatedArticleIdRef.current = res.data;
         navigate(`/editor/${res.data}`, { replace: true });
       }
     } catch (error) {
@@ -98,7 +101,12 @@ const Editor = () => {
     void loadCategoriesAndTags();
 
     if (id) {
-      void loadArticle(Number(id));
+      const currentId = Number(id);
+      if (justCreatedArticleIdRef.current === currentId) {
+        justCreatedArticleIdRef.current = null;
+      } else {
+        void loadArticle(currentId);
+      }
     }
   }, [id, checkLogin, navigate, loadCategoriesAndTags, loadArticle]);
 
@@ -206,7 +214,7 @@ const Editor = () => {
             <div className="flex items-center space-x-4">
               <button
                 onClick={handleSaveDraft}
-                disabled={loading || !title.trim()}
+                disabled={loading || !title.trim() || !content.trim()}
                 className="btn btn-secondary"
               >
                 保存草稿
@@ -220,6 +228,12 @@ const Editor = () => {
               </button>
             </div>
           </div>
+
+          {loadError && (
+            <div className="mb-4 p-3 rounded-lg border border-yellow-300 bg-yellow-50 text-yellow-800 dark:bg-yellow-900/20 dark:border-yellow-800 dark:text-yellow-200">
+              {loadError}
+            </div>
+          )}
 
           {/* 编辑区域 */}
           <div className="card p-6 space-y-6">
