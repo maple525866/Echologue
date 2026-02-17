@@ -29,8 +29,8 @@ public class TagController {
     @Operation(summary = "创建标签", description = "需要登录")
     @PostMapping
     @SaCheckLogin
-    public Result<Long> createTag(@RequestParam String name,
-                                   @RequestParam String slug) {
+    public Result<Long> createTag(@RequestParam(name = "name") String name,
+                                   @RequestParam(name = "slug") String slug) {
         Long id = tagApplicationService.createTag(name, slug);
         return Result.success("创建成功", id);
     }
@@ -41,9 +41,9 @@ public class TagController {
     @Operation(summary = "更新标签", description = "需要登录")
     @PutMapping("/{id}")
     @SaCheckLogin
-    public Result<Void> updateTag(@PathVariable Long id,
-                                   @RequestParam String name,
-                                   @RequestParam String slug) {
+    public Result<Void> updateTag(@PathVariable(name = "id") Long id,
+                                   @RequestParam(name = "name") String name,
+                                   @RequestParam(name = "slug") String slug) {
         tagApplicationService.updateTag(id, name, slug);
         return Result.success("更新成功", null);
     }
@@ -54,7 +54,7 @@ public class TagController {
     @Operation(summary = "删除标签", description = "需要登录")
     @DeleteMapping("/{id}")
     @SaCheckLogin
-    public Result<Void> deleteTag(@PathVariable Long id) {
+    public Result<Void> deleteTag(@PathVariable(name = "id") Long id) {
         tagApplicationService.deleteTag(id);
         return Result.success("删除成功", null);
     }
@@ -74,7 +74,7 @@ public class TagController {
      */
     @Operation(summary = "根据ID查询标签")
     @GetMapping("/{id}")
-    public Result<Tag> getTagById(@PathVariable Long id) {
+    public Result<Tag> getTagById(@PathVariable(name = "id") Long id) {
         Tag tag = tagApplicationService.getTagById(id);
         return Result.success(tag);
     }

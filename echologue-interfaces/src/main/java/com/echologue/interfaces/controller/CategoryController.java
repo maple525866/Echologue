@@ -30,9 +30,9 @@ public class CategoryController {
     @Operation(summary = "创建分类", description = "需要登录")
     @PostMapping
     @SaCheckLogin
-    public Result<Long> createCategory(@RequestParam String name,
-                                        @RequestParam String slug,
-                                        @RequestParam(required = false) String description) {
+    public Result<Long> createCategory(@RequestParam(name = "name") String name,
+                                        @RequestParam(name = "slug") String slug,
+                                        @RequestParam(name = "description", required = false) String description) {
         Long id = categoryApplicationService.createCategory(name, slug, description);
         return Result.success("创建成功", id);
     }
@@ -43,10 +43,10 @@ public class CategoryController {
     @Operation(summary = "更新分类", description = "需要登录")
     @PutMapping("/{id}")
     @SaCheckLogin
-    public Result<Void> updateCategory(@PathVariable Long id,
-                                        @RequestParam String name,
-                                        @RequestParam String slug,
-                                        @RequestParam(required = false) String description) {
+    public Result<Void> updateCategory(@PathVariable(name = "id") Long id,
+                                        @RequestParam(name = "name") String name,
+                                        @RequestParam(name = "slug") String slug,
+                                        @RequestParam(name = "description", required = false) String description) {
         categoryApplicationService.updateCategory(id, name, slug, description);
         return Result.success("更新成功", null);
     }
@@ -57,7 +57,7 @@ public class CategoryController {
     @Operation(summary = "删除分类", description = "需要登录")
     @DeleteMapping("/{id}")
     @SaCheckLogin
-    public Result<Void> deleteCategory(@PathVariable Long id) {
+    public Result<Void> deleteCategory(@PathVariable(name = "id") Long id) {
         categoryApplicationService.deleteCategory(id);
         return Result.success("删除成功", null);
     }
@@ -77,7 +77,7 @@ public class CategoryController {
      */
     @Operation(summary = "根据ID查询分类")
     @GetMapping("/{id}")
-    public Result<Category> getCategoryById(@PathVariable Long id) {
+    public Result<Category> getCategoryById(@PathVariable(name = "id") Long id) {
         Category category = categoryApplicationService.getCategoryById(id);
         return Result.success(category);
     }

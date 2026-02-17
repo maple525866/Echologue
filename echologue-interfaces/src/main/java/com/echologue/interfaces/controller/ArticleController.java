@@ -58,7 +58,7 @@ public class ArticleController {
     @Operation(summary = "更新文章", description = "需要登录，只能修改自己的文章")
     @PutMapping("/{id}")
     @SaCheckLogin
-    public Result<Void> updateArticle(@PathVariable Long id, 
+    public Result<Void> updateArticle(@PathVariable(name = "id") Long id, 
                                        @Valid @RequestBody UpdateArticleRequest request) {
         UpdateArticleCmd cmd = new UpdateArticleCmd();
         cmd.setArticleId(id);
@@ -79,7 +79,7 @@ public class ArticleController {
     @Operation(summary = "发布文章", description = "需要登录，只能发布自己的文章")
     @PostMapping("/{id}/publish")
     @SaCheckLogin
-    public Result<Void> publishArticle(@PathVariable Long id) {
+    public Result<Void> publishArticle(@PathVariable(name = "id") Long id) {
         articleApplicationService.publishArticle(id);
         return Result.success("发布成功", null);
     }
@@ -90,7 +90,7 @@ public class ArticleController {
     @Operation(summary = "取消发布", description = "需要登录，只能操作自己的文章")
     @PostMapping("/{id}/unpublish")
     @SaCheckLogin
-    public Result<Void> unpublishArticle(@PathVariable Long id) {
+    public Result<Void> unpublishArticle(@PathVariable(name = "id") Long id) {
         articleApplicationService.unpublishArticle(id);
         return Result.success("取消发布成功", null);
     }
@@ -101,7 +101,7 @@ public class ArticleController {
     @Operation(summary = "删除文章", description = "需要登录，只能删除自己的文章")
     @DeleteMapping("/{id}")
     @SaCheckLogin
-    public Result<Void> deleteArticle(@PathVariable Long id) {
+    public Result<Void> deleteArticle(@PathVariable(name = "id") Long id) {
         articleApplicationService.deleteArticle(id);
         return Result.success("删除成功", null);
     }
@@ -111,7 +111,7 @@ public class ArticleController {
      */
     @Operation(summary = "获取文章详情")
     @GetMapping("/{id}")
-    public Result<ArticleDetailResponse> getArticleDetail(@PathVariable Long id) {
+    public Result<ArticleDetailResponse> getArticleDetail(@PathVariable(name = "id") Long id) {
         ArticleDTO articleDTO = articleApplicationService.getArticleDetail(id);
         
         ArticleDetailResponse response = ArticleDetailResponse.builder()
@@ -143,8 +143,8 @@ public class ArticleController {
     @Operation(summary = "获取已发布文章列表", description = "分页查询")
     @GetMapping
     public Result<PageResult<ArticleListResponse>> getPublishedArticles(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
         
         PageResult<ArticleDTO> pageResult = articleApplicationService.getPublishedArticles(page, size);
         
@@ -182,8 +182,8 @@ public class ArticleController {
     @GetMapping("/my")
     @SaCheckLogin
     public Result<PageResult<ArticleListResponse>> getMyArticles(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
         
         PageResult<ArticleDTO> pageResult = articleApplicationService.getMyArticles(page, size);
         

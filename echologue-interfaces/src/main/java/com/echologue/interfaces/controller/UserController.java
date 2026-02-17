@@ -84,7 +84,7 @@ public class UserController {
      */
     @Operation(summary = "根据ID获取用户信息")
     @GetMapping("/{userId}")
-    public Result<UserInfoResponse> getUserById(@PathVariable Long userId) {
+    public Result<UserInfoResponse> getUserById(@PathVariable(name = "userId") Long userId) {
         UserDTO userDTO = userApplicationService.getUserById(userId);
         
         UserInfoResponse response = UserInfoResponse.builder()
