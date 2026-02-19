@@ -18,18 +18,14 @@ export default {
       },
       colors: {
         ink: {
-          // 背景层次
-          base:    '#141414',
-          surface: '#1c1c1c',
-          hover:   '#222222',
-          // 边框
-          border:  '#2e2e2e',
-          // 文字
-          primary:   '#f0ede8',
-          secondary: '#8a8a8a',
-          // 强调 & 危险
-          accent:  '#a8b8cc',
-          danger:  '#e07070',
+          base:      'var(--color-base)',
+          surface:   'var(--color-surface)',
+          hover:     'var(--color-hover)',
+          border:    'var(--color-border)',
+          primary:   'var(--color-primary)',
+          secondary: 'var(--color-secondary)',
+          accent:    'var(--color-accent)',
+          danger:    'var(--color-danger)',
         },
       },
     },

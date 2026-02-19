@@ -17,7 +17,7 @@ type MarkdownAnchorProps = ComponentPropsWithoutRef<'a'> & ExtraProps;
 
 const MarkdownViewer = ({ content }: MarkdownViewerProps) => {
   return (
-    <div className="prose-dark">
+    <div className="prose-content">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight]}

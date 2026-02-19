@@ -40,7 +40,7 @@ const ArticleDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-ink-base">
+      <div className="min-h-screen relative z-10">
         <Header />
         <div className="container-content py-20 flex flex-col items-center gap-4">
           <div className="w-6 h-6 rounded-full border-2 border-ink-border border-t-ink-accent animate-spin" />
@@ -55,7 +55,7 @@ const ArticleDetail = () => {
   const isAuthor = userInfo && userInfo.id === article.authorId;
 
   return (
-    <div className="min-h-screen bg-ink-base">
+    <div className="min-h-screen relative z-10">
       <Header />
 
       <main className="container-content py-14">

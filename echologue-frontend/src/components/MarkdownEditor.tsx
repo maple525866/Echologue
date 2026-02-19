@@ -135,7 +135,7 @@ const MarkdownEditor = ({ value, onChange, placeholder }: MarkdownEditorProps) =
             style={{ minHeight: '520px' }}
           />
         ) : (
-          <div className="prose-dark overflow-y-auto p-5" style={{ minHeight: '520px' }}>
+          <div className="prose-content overflow-y-auto p-5" style={{ minHeight: '520px' }}>
             <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}>
               {value || '*暂无内容*'}
             </ReactMarkdown>

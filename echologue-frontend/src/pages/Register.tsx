@@ -71,7 +71,7 @@ const Register = () => {
   );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-ink-base px-4">
+    <div className="min-h-screen flex items-center justify-center px-4 relative z-10">
       <div className="w-full max-w-sm">
         {/* 品牌区 */}
         <div className="mb-10">

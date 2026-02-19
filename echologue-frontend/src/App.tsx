@@ -8,6 +8,7 @@ import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ArticleDetail from '@/pages/ArticleDetail';
 import Editor from '@/pages/Editor';
+import StarBackground from '@/components/StarBackground';
 
 // 路由守卫组件 - 需要登录
 const RequireAuth = ({ children }: { children: ReactElement }) => {
@@ -41,6 +42,8 @@ function App() {
   }, [isLogin, setUserInfo, clearUserInfo]);
 
   return (
+    <>
+    <StarBackground />
     <BrowserRouter>
       <Routes>
         {/* 首页 - 文章列表 */}
@@ -79,6 +82,7 @@ function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
+    </>
   );
 }
 

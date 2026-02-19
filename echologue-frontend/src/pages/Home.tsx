@@ -35,7 +35,7 @@ const Home = () => {
   const totalPages = Math.ceil(total / pageSize);
 
   return (
-    <div className="min-h-screen bg-ink-base">
+    <div className="min-h-screen relative z-10">
       <Header />
 
       <main className="container-content py-16">
