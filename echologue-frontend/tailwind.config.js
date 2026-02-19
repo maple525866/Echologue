@@ -11,21 +11,26 @@ export default {
         'content': '720px',
       },
       fontFamily: {
-        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
       },
       lineHeight: {
-        'relaxed': '1.625',
+        'relaxed': '1.75',
       },
       colors: {
-        primary: {
-          DEFAULT: '#2F80ED',
-          dark: '#1E5BB8',
+        ink: {
+          // 背景层次
+          base:    '#141414',
+          surface: '#1c1c1c',
+          hover:   '#222222',
+          // 边框
+          border:  '#2e2e2e',
+          // 文字
+          primary:   '#f0ede8',
+          secondary: '#8a8a8a',
+          // 强调 & 危险
+          accent:  '#a8b8cc',
+          danger:  '#e07070',
         },
-        dark: {
-          bg: '#1a1a1a',
-          card: '#2d2d2d',
-          text: '#e0e0e0',
-        }
       },
     },
   },

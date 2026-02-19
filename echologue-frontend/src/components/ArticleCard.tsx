@@ -6,7 +6,6 @@ interface ArticleCardProps {
 }
 
 const ArticleCard = ({ article }: ArticleCardProps) => {
-  // 格式化日期
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('zh-CN', {
@@ -17,95 +16,64 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
   };
 
   return (
-    <Link to={`/article/${article.id}`}>
-      <article className="card p-6 cursor-pointer">
+    <Link to={`/article/${article.id}`} className="block group">
+      <article className="py-6 border-b border-ink-border last:border-0 cursor-pointer">
         {/* 标题 */}
-        <h2 className="text-2xl font-bold mb-3 hover:text-primary transition-colors">
+        <h2 className="text-base font-medium text-ink-primary mb-2 group-hover:text-ink-accent transition-colors duration-200 leading-snug">
           {article.title}
         </h2>
 
         {/* 摘要 */}
         {article.summary && (
-          <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+          <p className="text-sm text-ink-secondary mb-3 line-clamp-2 leading-relaxed">
             {article.summary}
           </p>
         )}
 
-        {/* 元信息 */}
-        <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-          <div className="flex items-center space-x-4">
+        {/* 元信息行 */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4 text-xs text-ink-secondary">
             {/* 作者 */}
-            <span className="flex items-center space-x-1">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                />
+            <span className="flex items-center gap-1.5">
+              <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
               </svg>
-              <span>{article.authorName || '匿名'}</span>
+              {article.authorName || '匿名'}
             </span>
 
-            {/* 发布时间 */}
-            <span className="flex items-center space-x-1">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
+            {/* 时间 */}
+            <span className="flex items-center gap-1.5">
+              <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 9v7.5" />
               </svg>
-              <span>{formatDate(article.publishedAt || article.createdAt)}</span>
+              {formatDate(article.publishedAt || article.createdAt)}
             </span>
           </div>
 
-          {/* 统计信息 */}
-          <div className="flex items-center space-x-4">
-            {/* 浏览量 */}
-            <span className="flex items-center space-x-1">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                />
+          {/* 统计 */}
+          <div className="flex items-center gap-3 text-xs text-ink-secondary">
+            <span className="flex items-center gap-1">
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              <span>{article.views}</span>
+              {article.views}
             </span>
-
-            {/* 点赞数 */}
-            <span className="flex items-center space-x-1">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                />
+            <span className="flex items-center gap-1">
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
               </svg>
-              <span>{article.likes}</span>
+              {article.likes}
             </span>
           </div>
         </div>
 
         {/* 标签 */}
         {article.tags && article.tags.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-3 flex flex-wrap gap-1.5">
             {article.tags.map((tag) => (
-              <span
-                key={tag.id}
-                className="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-dark-card text-gray-600 dark:text-gray-400"
-              >
-                #{tag.name}
+              <span key={tag.id} className="tag">
+                {tag.name}
               </span>
             ))}
           </div>

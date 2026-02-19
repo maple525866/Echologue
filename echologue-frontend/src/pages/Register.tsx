@@ -4,7 +4,7 @@ import { register } from '@/api/user';
 
 const Register = () => {
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -14,42 +14,33 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const getErrorMessage = (error: unknown, fallback: string) => {
-    return error instanceof Error ? error.message : fallback;
-  };
+  const getErrorMessage = (err: unknown, fallback: string) =>
+    err instanceof Error ? err.message : fallback;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    // 客户端校验
     if (!formData.username || !formData.email || !formData.password) {
       setError('请填写所有必填项');
       return;
     }
-
     if (formData.password !== formData.confirmPassword) {
       setError('两次密码输入不一致');
       return;
     }
-
     if (formData.password.length < 6) {
-      setError('密码长度至少为6位');
+      setError('密码长度至少为 6 位');
       return;
     }
 
     setLoading(true);
-
     try {
-      // 调用注册接口
       await register({
         username: formData.username,
         email: formData.email,
         password: formData.password,
       });
-      
-      // 注册成功，跳转到登录页
-      alert('注册成功！请登录');
       navigate('/login');
     } catch (err: unknown) {
       setError(getErrorMessage(err, '注册失败，请稍后重试'));
@@ -58,101 +49,68 @@ const Register = () => {
     }
   };
 
+  const field = (
+    label: string,
+    type: string,
+    key: keyof typeof formData,
+    placeholder: string,
+  ) => (
+    <div className="space-y-1.5">
+      <label className="block text-xs font-medium text-ink-secondary uppercase tracking-wider">
+        {label}
+      </label>
+      <input
+        type={type}
+        value={formData[key]}
+        onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
+        className="input"
+        placeholder={placeholder}
+        required
+      />
+    </div>
+  );
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-dark-bg px-4">
-      <div className="max-w-md w-full">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gradient mb-2">Echologue</h1>
-          <p className="text-gray-600 dark:text-gray-400">创建你的账号</p>
+    <div className="min-h-screen flex items-center justify-center bg-ink-base px-4">
+      <div className="w-full max-w-sm">
+        {/* 品牌区 */}
+        <div className="mb-10">
+          <h1 className="text-2xl font-semibold text-ink-primary tracking-tight">Echologue</h1>
+          <p className="mt-1 text-sm text-ink-secondary">创建你的账号</p>
         </div>
 
-        <div className="card p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        {/* 表单卡片 */}
+        <div className="bg-ink-surface rounded-xl border border-ink-border p-7">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {/* 错误提示 */}
             {error && (
-              <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm">
+              <div className="px-3 py-2.5 rounded-lg bg-[#2a1a1a] border border-[#4a2a2a] text-ink-danger text-sm">
                 {error}
               </div>
             )}
 
-            {/* 用户名 */}
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                用户名
-              </label>
-              <input
-                type="text"
-                value={formData.username}
-                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                className="input"
-                placeholder="请输入用户名"
-                required
-              />
-            </div>
+            {field('用户名', 'text', 'username', '请输入用户名')}
+            {field('邮箱', 'email', 'email', 'your@email.com')}
+            {field('密码', 'password', 'password', '至少 6 位字符')}
+            {field('确认密码', 'password', 'confirmPassword', '请再次输入密码')}
 
-            {/* 邮箱 */}
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                邮箱
-              </label>
-              <input
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="input"
-                placeholder="your@email.com"
-                required
-              />
-            </div>
-
-            {/* 密码 */}
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                密码
-              </label>
-              <input
-                type="password"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="input"
-                placeholder="至少6位字符"
-                required
-              />
-            </div>
-
-            {/* 确认密码 */}
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                确认密码
-              </label>
-              <input
-                type="password"
-                value={formData.confirmPassword}
-                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                className="input"
-                placeholder="请再次输入密码"
-                required
-              />
-            </div>
-
-            {/* 注册按钮 */}
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-primary w-full"
+              className="btn btn-primary w-full mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? '注册中...' : '注册'}
+              {loading ? '注册中…' : '注册'}
             </button>
           </form>
-
-          {/* 登录链接 */}
-          <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-            已有账号？{' '}
-            <Link to="/login" className="text-primary hover:text-primary-dark font-medium">
-              立即登录
-            </Link>
-          </div>
         </div>
+
+        {/* 登录跳转 */}
+        <p className="mt-5 text-center text-sm text-ink-secondary">
+          已有账号？{' '}
+          <Link to="/login" className="text-ink-accent hover:text-ink-primary transition-colors duration-150 font-medium">
+            立即登录
+          </Link>
+        </p>
       </div>
     </div>
   );

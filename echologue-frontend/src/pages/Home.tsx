@@ -35,31 +35,32 @@ const Home = () => {
   const totalPages = Math.ceil(total / pageSize);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-dark-bg">
+    <div className="min-h-screen bg-ink-base">
       <Header />
-      
-      <main className="container-content py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-4">
-            <span className="text-gradient">Echologue</span>
+
+      <main className="container-content py-16">
+        {/* Hero */}
+        <div className="mb-14">
+          <h1 className="text-3xl font-semibold text-ink-primary tracking-tight mb-2">
+            Echologue
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400">
-            简洁、优雅的博客写作平台
+          <p className="text-ink-secondary text-sm">
+            简洁、优雅的写作空间
           </p>
         </div>
 
         {/* 文章列表 */}
         {loading ? (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-primary border-t-transparent"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">加载中...</p>
+          <div className="py-20 flex flex-col items-center gap-4">
+            <div className="w-6 h-6 rounded-full border-2 border-ink-border border-t-ink-accent animate-spin" />
+            <span className="text-sm text-ink-secondary">加载中</span>
           </div>
         ) : articles.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-600 dark:text-gray-400">还没有文章，快去创作吧！</p>
+          <div className="py-20 text-center">
+            <p className="text-ink-secondary text-sm">还没有文章，快去创作吧</p>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-px">
             {articles.map((article) => (
               <ArticleCard key={article.id} article={article} />
             ))}
@@ -68,23 +69,23 @@ const Home = () => {
 
         {/* 分页 */}
         {totalPages > 1 && (
-          <div className="mt-12 flex justify-center items-center space-x-4">
+          <div className="mt-12 flex justify-center items-center gap-3">
             <button
               onClick={() => setPage(page - 1)}
               disabled={page === 1}
-              className="btn btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn btn-secondary disabled:opacity-30 disabled:cursor-not-allowed"
             >
               上一页
             </button>
-            
-            <span className="text-gray-600 dark:text-gray-400">
-              第 {page} / {totalPages} 页
+
+            <span className="text-sm text-ink-secondary tabular-nums">
+              {page} / {totalPages}
             </span>
-            
+
             <button
               onClick={() => setPage(page + 1)}
               disabled={page === totalPages}
-              className="btn btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn btn-secondary disabled:opacity-30 disabled:cursor-not-allowed"
             >
               下一页
             </button>

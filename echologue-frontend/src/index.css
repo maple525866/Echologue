@@ -4,66 +4,222 @@
 
 @layer base {
   * {
-    @apply border-gray-200 dark:border-gray-700;
+    @apply border-ink-border;
   }
-  
+
+  html {
+    @apply bg-ink-base text-ink-primary;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
-    @apply bg-white dark:bg-dark-bg text-gray-900 dark:text-dark-text;
-    @apply font-sans leading-relaxed;
-    @apply min-h-screen;
+    @apply bg-ink-base text-ink-primary font-sans leading-relaxed min-h-screen;
+  }
+
+  ::selection {
+    background: rgba(168, 184, 204, 0.25);
+  }
+
+  /* 自定义细滚动条 */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #2e2e2e;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3e3e3e;
   }
 }
 
 @layer components {
-  /* 自定义按钮样式 */
+  /* 按钮基础 */
   .btn {
-    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
-    @apply hover:shadow-lg active:scale-95;
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-md font-medium text-sm
+           transition-all duration-200 cursor-pointer select-none;
   }
-  
+
   .btn-primary {
-    @apply bg-primary text-white hover:bg-primary-dark;
+    @apply bg-ink-accent text-ink-base hover:bg-opacity-90 active:scale-95;
+    color: #141414;
   }
-  
+
   .btn-secondary {
-    @apply bg-gray-200 dark:bg-dark-card text-gray-900 dark:text-dark-text;
-    @apply hover:bg-gray-300 dark:hover:bg-gray-600;
+    @apply bg-ink-surface text-ink-primary border border-ink-border
+           hover:bg-ink-hover hover:border-[#3e3e3e] active:scale-95;
   }
-  
-  /* 卡片样式 */
+
+  .btn-ghost {
+    @apply text-ink-secondary hover:text-ink-primary hover:bg-ink-surface
+           rounded-md transition-colors duration-150;
+  }
+
+  /* 卡片 */
   .card {
-    @apply bg-white dark:bg-dark-card rounded-lg shadow-sm;
-    @apply border border-gray-200 dark:border-gray-700;
-    @apply transition-shadow duration-200 hover:shadow-lg;
+    @apply bg-ink-surface rounded-xl border border-ink-border
+           transition-all duration-200;
   }
-  
-  /* 输入框样式 */
+
+  .card-hover {
+    @apply card hover:border-[#3e3e3e] hover:bg-ink-hover;
+  }
+
+  /* 输入框 */
   .input {
-    @apply w-full px-4 py-2 rounded-lg;
-    @apply bg-white dark:bg-dark-card;
-    @apply border border-gray-300 dark:border-gray-600;
-    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
-    @apply transition-all duration-200;
+    @apply w-full px-4 py-2.5 rounded-lg text-sm
+           bg-ink-base text-ink-primary
+           border border-ink-border
+           placeholder:text-ink-secondary
+           focus:outline-none focus:border-ink-accent
+           transition-colors duration-200;
   }
-  
-  /* 容器样式 */
+
+  /* 内容容器 */
   .container-content {
     @apply max-w-content mx-auto px-6;
+  }
+
+  /* 分割线 */
+  .divider {
+    @apply border-t border-ink-border my-6;
   }
 }
 
 @layer utilities {
-  /* 文本渐变 */
-  .text-gradient {
-    @apply bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent;
+  /* 文字色 */
+  .text-muted {
+    color: #8a8a8a;
   }
-  
-  /* 滚动条样式 */
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
+
+  /* 标签 badge */
+  .tag {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded text-xs
+           bg-[#222222] text-ink-secondary border border-ink-border;
   }
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
+}
+
+/* ============================================================
+   Markdown 正文排版（代替 @tailwindcss/typography）
+   ============================================================ */
+.prose-dark {
+  color: #e8e4de;
+  line-height: 1.85;
+  font-size: 1rem;
+  max-width: none;
+}
+
+.prose-dark h1,
+.prose-dark h2,
+.prose-dark h3,
+.prose-dark h4 {
+  color: #f0ede8;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-top: 2em;
+  margin-bottom: 0.6em;
+}
+.prose-dark h1 { font-size: 1.75rem; }
+.prose-dark h2 { font-size: 1.35rem; border-bottom: 1px solid #2e2e2e; padding-bottom: 0.4em; }
+.prose-dark h3 { font-size: 1.15rem; }
+.prose-dark h4 { font-size: 1rem; }
+
+.prose-dark p {
+  margin-top: 0;
+  margin-bottom: 1.25em;
+}
+
+.prose-dark a {
+  color: #a8b8cc;
+  text-decoration: underline;
+  text-decoration-color: rgba(168, 184, 204, 0.4);
+  transition: color 150ms;
+}
+.prose-dark a:hover { color: #f0ede8; }
+
+.prose-dark strong { color: #f0ede8; font-weight: 600; }
+.prose-dark em { color: #c8c4be; }
+
+.prose-dark ul,
+.prose-dark ol {
+  padding-left: 1.5em;
+  margin-bottom: 1.25em;
+}
+.prose-dark ul { list-style-type: disc; }
+.prose-dark ol { list-style-type: decimal; }
+.prose-dark li { margin-bottom: 0.35em; }
+
+.prose-dark blockquote {
+  border-left: 3px solid #3e3e3e;
+  margin: 1.5em 0;
+  padding: 0.5em 1.25em;
+  color: #8a8a8a;
+  font-style: italic;
+}
+
+.prose-dark hr {
+  border: none;
+  border-top: 1px solid #2e2e2e;
+  margin: 2em 0;
+}
+
+/* 行内代码 */
+.prose-dark code:not(pre code) {
+  background: #222222;
+  color: #c8b4a0;
+  padding: 0.15em 0.45em;
+  border-radius: 4px;
+  font-size: 0.875em;
+  border: 1px solid #2e2e2e;
+}
+
+/* 代码块容器 */
+.prose-dark pre {
+  background: #1a1a1a !important;
+  border: 1px solid #2e2e2e;
+  border-radius: 8px;
+  padding: 1.25rem;
+  overflow-x: auto;
+  margin: 1.5em 0;
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+.prose-dark pre code {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  color: inherit;
+}
+
+/* 表格 */
+.prose-dark table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+  font-size: 0.9rem;
+}
+.prose-dark th {
+  color: #f0ede8;
+  font-weight: 500;
+  text-align: left;
+  padding: 0.6em 0.9em;
+  border-bottom: 1px solid #3e3e3e;
+}
+.prose-dark td {
+  padding: 0.6em 0.9em;
+  border-bottom: 1px solid #2e2e2e;
+  color: #c8c4be;
+}
+.prose-dark tr:last-child td { border-bottom: none; }
+
+/* 图片 */
+.prose-dark img {
+  border-radius: 8px;
+  max-width: 100%;
+  border: 1px solid #2e2e2e;
 }
