@@ -11,21 +11,22 @@ export default {
         'content': '720px',
       },
       fontFamily: {
-        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
       },
       lineHeight: {
-        'relaxed': '1.625',
+        'relaxed': '1.75',
       },
       colors: {
-        primary: {
-          DEFAULT: '#2F80ED',
-          dark: '#1E5BB8',
+        ink: {
+          base:      'var(--color-base)',
+          surface:   'var(--color-surface)',
+          hover:     'var(--color-hover)',
+          border:    'var(--color-border)',
+          primary:   'var(--color-primary)',
+          secondary: 'var(--color-secondary)',
+          accent:    'var(--color-accent)',
+          danger:    'var(--color-danger)',
         },
-        dark: {
-          bg: '#1a1a1a',
-          card: '#2d2d2d',
-          text: '#e0e0e0',
-        }
       },
     },
   },

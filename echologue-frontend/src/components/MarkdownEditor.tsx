@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -12,102 +12,131 @@ interface MarkdownEditorProps {
 
 const MarkdownEditor = ({ value, onChange, placeholder }: MarkdownEditorProps) => {
   const [isPreview, setIsPreview] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const wrapSelection = (prefix: string, suffix = prefix) => {
+    const ta = textareaRef.current;
+    if (!ta) return;
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+    const selected = value.slice(start, end);
+    const next = value.slice(0, start) + prefix + selected + suffix + value.slice(end);
+    onChange(next);
+    requestAnimationFrame(() => {
+      ta.focus();
+      ta.setSelectionRange(start + prefix.length, end + prefix.length);
+    });
+  };
+
+  const insertLine = (prefix: string) => {
+    const ta = textareaRef.current;
+    if (!ta) return;
+    const start = ta.selectionStart;
+    const lineStart = value.lastIndexOf('\n', start - 1) + 1;
+    const next = value.slice(0, lineStart) + prefix + value.slice(lineStart);
+    onChange(next);
+    requestAnimationFrame(() => {
+      ta.focus();
+      ta.setSelectionRange(start + prefix.length, start + prefix.length);
+    });
+  };
+
+  type ToolDef = { label: string; title: string; action: () => void };
+
+  const tools: ToolDef[] = [
+    {
+      label: 'B',
+      title: '加粗 (Ctrl+B)',
+      action: () => wrapSelection('**'),
+    },
+    {
+      label: 'I',
+      title: '斜体',
+      action: () => wrapSelection('_'),
+    },
+    {
+      label: 'H',
+      title: '标题',
+      action: () => insertLine('## '),
+    },
+    {
+      label: '—',
+      title: '分割线',
+      action: () => onChange(value + '\n\n---\n\n'),
+    },
+    {
+      label: '</>',
+      title: '代码块',
+      action: () => wrapSelection('`'),
+    },
+    {
+      label: '≡',
+      title: '引用',
+      action: () => insertLine('> '),
+    },
+  ];
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full flex flex-col bg-ink-base rounded-lg border border-ink-border overflow-hidden">
       {/* 工具栏 */}
-      <div className="flex items-center justify-between p-2 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center space-x-2">
-          <button
-            type="button"
-            className="p-2 hover:bg-gray-100 dark:hover:bg-dark-card rounded transition-colors"
-            title="加粗 (Ctrl+B)"
-            onClick={() => {
-              const textarea = document.querySelector('textarea');
-              if (textarea) {
-                const start = textarea.selectionStart;
-                const end = textarea.selectionEnd;
-                const selectedText = value.substring(start, end);
-                const newText = value.substring(0, start) + `**${selectedText}**` + value.substring(end);
-                onChange(newText);
-              }
-            }}
-          >
-            <strong>B</strong>
-          </button>
-          <button
-            type="button"
-            className="p-2 hover:bg-gray-100 dark:hover:bg-dark-card rounded transition-colors italic"
-            title="斜体 (Ctrl+I)"
-          >
-            I
-          </button>
-          <button
-            type="button"
-            className="p-2 hover:bg-gray-100 dark:hover:bg-dark-card rounded transition-colors"
-            title="插入链接"
-          >
-            🔗
-          </button>
-          <button
-            type="button"
-            className="p-2 hover:bg-gray-100 dark:hover:bg-dark-card rounded transition-colors"
-            title="插入图片"
-          >
-            🖼️
-          </button>
-          <button
-            type="button"
-            className="p-2 hover:bg-gray-100 dark:hover:bg-dark-card rounded transition-colors"
-            title="代码块"
-          >
-            {'</>'}
-          </button>
+      <div className="flex items-center justify-between px-3 py-2 border-b border-ink-border bg-ink-surface">
+        <div className="flex items-center gap-1">
+          {tools.map((tool) => (
+            <button
+              key={tool.title}
+              type="button"
+              title={tool.title}
+              onClick={tool.action}
+              className={`px-2.5 py-1 rounded text-sm text-ink-secondary hover:text-ink-primary hover:bg-ink-hover transition-colors duration-150 font-mono leading-none ${
+                tool.label === 'B' ? 'font-bold' : tool.label === 'I' ? 'italic' : ''
+              }`}
+            >
+              {tool.label}
+            </button>
+          ))}
         </div>
 
-        {/* 预览/编辑切换 */}
-        <div className="flex items-center space-x-2">
+        {/* 编辑 / 预览 切换 */}
+        <div className="flex items-center bg-ink-hover rounded-md p-0.5">
           <button
             type="button"
-            className={`px-3 py-1 rounded transition-colors ${
-              !isPreview
-                ? 'bg-primary text-white'
-                : 'hover:bg-gray-100 dark:hover:bg-dark-card'
-            }`}
             onClick={() => setIsPreview(false)}
+            className={`px-3 py-1 rounded text-xs transition-colors duration-150 ${
+              !isPreview
+                ? 'bg-ink-surface text-ink-primary'
+                : 'text-ink-secondary hover:text-ink-primary'
+            }`}
           >
             编辑
           </button>
           <button
             type="button"
-            className={`px-3 py-1 rounded transition-colors ${
-              isPreview
-                ? 'bg-primary text-white'
-                : 'hover:bg-gray-100 dark:hover:bg-dark-card'
-            }`}
             onClick={() => setIsPreview(true)}
+            className={`px-3 py-1 rounded text-xs transition-colors duration-150 ${
+              isPreview
+                ? 'bg-ink-surface text-ink-primary'
+                : 'text-ink-secondary hover:text-ink-primary'
+            }`}
           >
             预览
           </button>
         </div>
       </div>
 
-      {/* 编辑区域 */}
+      {/* 内容区 */}
       <div className="flex-1 overflow-hidden">
         {!isPreview ? (
           <textarea
+            ref={textareaRef}
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            placeholder={placeholder || '在这里写下你的想法...（支持Markdown语法）'}
-            className="w-full h-full p-6 resize-none focus:outline-none bg-white dark:bg-dark-bg"
-            style={{ minHeight: '500px' }}
+            placeholder={placeholder ?? '在这里写下你的想法…（支持 Markdown 语法）'}
+            className="w-full p-5 resize-none focus:outline-none bg-ink-base text-ink-primary text-sm leading-relaxed placeholder:text-ink-secondary font-mono"
+            style={{ minHeight: '520px' }}
           />
         ) : (
-          <div className="h-full overflow-y-auto p-6 prose dark:prose-invert max-w-none">
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              rehypePlugins={[rehypeHighlight]}
-            >
+          <div className="prose-content overflow-y-auto p-5" style={{ minHeight: '520px' }}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}>
               {value || '*暂无内容*'}
             </ReactMarkdown>
           </div>

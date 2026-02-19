@@ -8,10 +8,10 @@ interface ThemeStore {
   setTheme: (theme: Theme) => void;
 }
 
-// 从localStorage获取主题，默认为light
+// 从localStorage获取主题，默认为dark
 const getInitialTheme = (): Theme => {
   const savedTheme = localStorage.getItem('theme') as Theme;
-  return savedTheme || 'light';
+  return savedTheme || 'dark';
 };
 
 // 应用主题到HTML根元素

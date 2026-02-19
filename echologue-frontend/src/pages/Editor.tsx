@@ -32,10 +32,7 @@ const Editor = () => {
 
   const loadCategoriesAndTags = useCallback(async () => {
     try {
-      const [categoryRes, tagRes] = await Promise.all([
-        getCategoryList(),
-        getTagList(),
-      ]);
+      const [categoryRes, tagRes] = await Promise.all([getCategoryList(), getTagList()]);
       setCategories(categoryRes.data);
       setTags(tagRes.data);
     } catch (error) {
@@ -64,7 +61,6 @@ const Editor = () => {
 
   const handleSaveDraft = useCallback(async () => {
     if (!title.trim() || !content.trim()) return;
-
     setSaving(true);
     try {
       const data = {
@@ -74,12 +70,10 @@ const Editor = () => {
         categoryId,
         tagIds: selectedTags,
       };
-
       if (id) {
         await updateArticle(Number(id), data);
       } else {
         const res = await createArticle(data);
-        // 创建成功后跳转到编辑页面
         justCreatedArticleIdRef.current = res.data;
         navigate(`/editor/${res.data}`, { replace: true });
       }
@@ -91,15 +85,11 @@ const Editor = () => {
   }, [title, content, summary, categoryId, selectedTags, id, navigate]);
 
   useEffect(() => {
-    // 检查登录状态
     if (!checkLogin()) {
-      alert('请先登录');
       navigate('/login');
       return;
     }
-
     void loadCategoriesAndTags();
-
     if (id) {
       const currentId = Number(id);
       if (justCreatedArticleIdRef.current === currentId) {
@@ -110,30 +100,16 @@ const Editor = () => {
     }
   }, [id, checkLogin, navigate, loadCategoriesAndTags, loadArticle]);
 
-  // 自动保存（防抖）
   useEffect(() => {
     if (!title.trim() || !content.trim()) return;
-
     const timer = setTimeout(() => {
-      if (!saving) {
-        void handleSaveDraft();
-      }
+      if (!saving) void handleSaveDraft();
     }, 3000);
-
     return () => clearTimeout(timer);
   }, [title, content, summary, categoryId, selectedTags, saving, handleSaveDraft]);
 
   const handlePublish = async () => {
-    if (!title.trim()) {
-      alert('请输入标题');
-      return;
-    }
-
-    if (!content.trim()) {
-      alert('请输入内容');
-      return;
-    }
-
+    if (!title.trim() || !content.trim()) return;
     setLoading(true);
     try {
       const data = {
@@ -143,24 +119,17 @@ const Editor = () => {
         categoryId,
         tagIds: selectedTags,
       };
-
       let articleId = id ? Number(id) : null;
-
-      // 如果是新文章，先创建
       if (!articleId) {
         const res = await createArticle(data);
         articleId = res.data;
       } else {
         await updateArticle(articleId, data);
       }
-
-      // 发布文章
       await publishArticle(articleId);
-
-      alert('发布成功！');
       navigate(`/article/${articleId}`);
     } catch (error: unknown) {
-      alert(error instanceof Error ? error.message : '发布失败');
+      console.error('发布失败:', error instanceof Error ? error.message : error);
     } finally {
       setLoading(false);
     }
@@ -168,141 +137,134 @@ const Editor = () => {
 
   const toggleTag = (tagId: number) => {
     if (selectedTags.includes(tagId)) {
-      setSelectedTags(selectedTags.filter(id => id !== tagId));
+      setSelectedTags(selectedTags.filter((t) => t !== tagId));
     } else {
-      if (selectedTags.length >= 5) {
-        alert('最多只能选择5个标签');
-        return;
-      }
+      if (selectedTags.length >= 5) return;
       setSelectedTags([...selectedTags, tagId]);
     }
   };
 
-  if (loading) {
+  if (loading && !title) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-dark-bg">
+      <div className="min-h-screen relative z-10">
         <Header />
-        <div className="container-content py-12 text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-primary border-t-transparent"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">加载中...</p>
+        <div className="container-content py-20 flex flex-col items-center gap-4">
+          <div className="w-6 h-6 rounded-full border-2 border-ink-border border-t-ink-accent animate-spin" />
+          <span className="text-sm text-ink-secondary">加载中</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-dark-bg">
+    <div className="min-h-screen relative z-10">
       <Header />
-      
-      <main className="container mx-auto py-8 px-4">
-        <div className="max-w-5xl mx-auto">
-          {/* 顶部操作栏 */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => navigate(-1)}
-                className="btn btn-secondary"
-              >
-                返回
-              </button>
-              {saving && (
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  自动保存中...
-                </span>
-              )}
-            </div>
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={handleSaveDraft}
-                disabled={loading || !title.trim() || !content.trim()}
-                className="btn btn-secondary"
-              >
-                保存草稿
-              </button>
-              <button
-                onClick={handlePublish}
-                disabled={loading}
-                className="btn btn-primary"
-              >
-                {loading ? '发布中...' : '发布文章'}
-              </button>
-            </div>
+
+      <main className="mx-auto max-w-4xl py-8 px-4">
+        {/* 顶部操作栏 */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <button onClick={() => navigate(-1)} className="btn btn-ghost text-sm">
+              ← 返回
+            </button>
+            {saving && (
+              <span className="text-xs text-ink-secondary">正在保存…</span>
+            )}
           </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleSaveDraft}
+              disabled={loading || !title.trim() || !content.trim()}
+              className="btn btn-secondary text-sm disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              保存草稿
+            </button>
+            <button
+              onClick={handlePublish}
+              disabled={loading || !title.trim() || !content.trim()}
+              className="btn btn-primary text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? '发布中…' : '发布'}
+            </button>
+          </div>
+        </div>
 
-          {loadError && (
-            <div className="mb-4 p-3 rounded-lg border border-yellow-300 bg-yellow-50 text-yellow-800 dark:bg-yellow-900/20 dark:border-yellow-800 dark:text-yellow-200">
-              {loadError}
-            </div>
-          )}
+        {loadError && (
+          <div className="mb-4 px-4 py-3 rounded-lg bg-[#2a2010] border border-[#4a3a20] text-[#d4a84b] text-sm">
+            {loadError}
+          </div>
+        )}
 
-          {/* 编辑区域 */}
-          <div className="card p-6 space-y-6">
-            {/* 标题 */}
+        {/* 编辑主区域 */}
+        <div className="bg-ink-surface rounded-xl border border-ink-border overflow-hidden">
+          {/* 标题 */}
+          <div className="px-6 pt-6 pb-4 border-b border-ink-border">
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="文章标题..."
-              className="w-full text-4xl font-bold focus:outline-none bg-transparent"
+              placeholder="文章标题"
+              className="w-full text-2xl font-semibold bg-transparent focus:outline-none text-ink-primary placeholder:text-ink-secondary tracking-tight"
             />
+          </div>
 
-            {/* 摘要 */}
+          {/* 摘要 */}
+          <div className="px-6 py-3 border-b border-ink-border">
             <textarea
               value={summary}
               onChange={(e) => setSummary(e.target.value)}
-              placeholder="文章摘要（选填）"
-              className="w-full h-20 resize-none focus:outline-none bg-transparent text-gray-600 dark:text-gray-400"
+              placeholder="添加摘要（选填）"
+              rows={2}
+              className="w-full resize-none bg-transparent focus:outline-none text-sm text-ink-secondary placeholder:text-ink-secondary leading-relaxed"
             />
+          </div>
 
-            {/* 分类和标签 */}
-            <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-              {/* 分类选择 */}
-              <div className="flex items-center space-x-2">
-                <label className="text-sm font-medium">分类:</label>
-                <select
-                  value={categoryId || ''}
-                  onChange={(e) => setCategoryId(Number(e.target.value) || undefined)}
-                  className="px-3 py-1 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-card focus:outline-none focus:ring-2 focus:ring-primary"
-                >
-                  <option value="">无分类</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* 标签选择 */}
-              <div className="flex items-center space-x-2">
-                <label className="text-sm font-medium">标签:</label>
-                <div className="flex flex-wrap gap-2">
-                  {tags.map((tag) => (
-                    <button
-                      key={tag.id}
-                      type="button"
-                      onClick={() => toggleTag(tag.id)}
-                      className={`px-3 py-1 text-sm rounded-full transition-colors ${
-                        selectedTags.includes(tag.id)
-                          ? 'bg-primary text-white'
-                          : 'bg-gray-100 dark:bg-dark-card hover:bg-gray-200 dark:hover:bg-gray-700'
-                      }`}
-                    >
-                      #{tag.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
+          {/* 分类 & 标签 */}
+          <div className="px-6 py-3 border-b border-ink-border flex flex-wrap items-center gap-4">
+            {/* 分类 */}
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-ink-secondary">分类</span>
+              <select
+                value={categoryId ?? ''}
+                onChange={(e) => setCategoryId(Number(e.target.value) || undefined)}
+                className="text-xs bg-ink-hover text-ink-secondary border border-ink-border rounded px-2 py-1 focus:outline-none focus:border-ink-accent transition-colors"
+              >
+                <option value="">无分类</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                ))}
+              </select>
             </div>
 
-            {/* Markdown编辑器 */}
-            <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
-              <MarkdownEditor
-                value={content}
-                onChange={setContent}
-                placeholder="开始写作..."
-              />
-            </div>
+            {/* 标签 */}
+            {tags.length > 0 && (
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs text-ink-secondary">标签</span>
+                {tags.map((tag) => (
+                  <button
+                    key={tag.id}
+                    type="button"
+                    onClick={() => toggleTag(tag.id)}
+                    className={`text-xs px-2.5 py-0.5 rounded border transition-colors duration-150 cursor-pointer ${
+                      selectedTags.includes(tag.id)
+                        ? 'bg-ink-accent border-ink-accent text-ink-base'
+                        : 'bg-transparent border-ink-border text-ink-secondary hover:border-[#3e3e3e] hover:text-ink-primary'
+                    }`}
+                  >
+                    {tag.name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Markdown 编辑器 */}
+          <div className="p-4">
+            <MarkdownEditor
+              value={content}
+              onChange={setContent}
+              placeholder="开始写作…"
+            />
           </div>
         </div>
       </main>
